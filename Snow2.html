@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forcing Side-by-Side Areas</title>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
+</head>
+<body>
+    <div id="chartContainer"></div>
+
+    <script type="text/javascript">
+        var svg = dimple.newSvg("#chartContainer", 590, 400);
+        var data = [
+            { "Month": "January", "Location": "Crater Lake, OR", "Snow Depth": 80 },
+            { "Month": "January", "Location": "Mount Hood, OR", "Snow Depth": 96 },
+            { "Month": "February", "Location": "Crater Lake, OR", "Snow Depth": 104 },
+            { "Month": "February", "Location": "Mount Hood, OR", "Snow Depth": 128 },
+            { "Month": "March", "Location": "Crater Lake, OR", "Snow Depth": 117 },
+            { "Month": "March", "Location": "Mount Hood, OR", "Snow Depth": 160 },
+            { "Month": "April", "Location": "Crater Lake, OR", "Snow Depth": 112 },
+            { "Month": "Aptil", "Location": "Mount Hood, OR", "Snow Depth": 164 },
+            { "Month": "May", "Location": "Crater Lake, OR", "Snow Depth": 77 },
+            { "Month": "May", "Location": "Mount Hood, OR", "Snow Depth": 142 },
+            { "Month": "June", "Location": "Crater Lake, OR", "Snow Depth": 24 },
+            { "Month": "June", "Location": "Mount Hood, OR", "Snow Depth": 95 },
+            { "Month": "July", "Location": "Crater Lake, OR", "Snow Depth": 1 },
+            { "Month": "July", "Location": "Mount Hood, OR", "Snow Depth": 21 },
+            { "Month": "August", "Location": "Crater Lake, OR", "Snow Depth": 0 },
+            { "Month": "August", "Location": "Mount Hood, OR", "Snow Depth": 0 },
+            { "Month": "September", "Location": "Crater Lake, OR", "Snow Depth": 0 },
+            { "Month": "September", "Location": "Mount Hood, OR", "Snow Depth": 0 },
+            { "Month": "October", "Location": "Crater Lake, OR", "Snow Depth": 2 },
+            { "Month": "October", "Location": "Mount Hood, OR", "Snow Depth": 4 },
+            { "Month": "November", "Location": "Crater Lake, OR", "Snow Depth": 17 },
+            { "Month": "November", "Location": "Mount Hood, OR", "Snow Depth": 22 },
+            { "Month": "December", "Location": "Crater Lake, OR", "Snow Depth": 49 },
+            { "Month": "December", "Location": "Mount Hood, OR", "Snow Depth": 58 }
+        ];
+
+        var myChart = new dimple.chart(svg, data);
+        myChart.setBounds(60, 30, 500, 330);
+        var x = myChart.addCategoryAxis("x", "Month");
+        x.addOrderRule(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]);
+        var y = myChart.addMeasureAxis("y", "Snow Depth");
+        // Explicitly set x and color for the series
+        var s = myChart.addSeries("Month", dimple.plot.area);
+        s.x = x;
+        s.y = y;
+        s.color = myChart.addColorAxis("Location");
+        s.lineWeight = 1;
+        myChart.draw();
+    </script>
+</body>
+</html>
