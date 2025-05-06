@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Gold Ghosts of Colorado</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+    
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 50px;
+      width: 100%;
+    }
+    #slider-container {
+      position: absolute;
+      bottom: 0;
+      background: white;
+      width: 100%;
+      padding: 10px;
+      font-family: sans-serif;
+      z-index: 1;
+    }
+    #year-label {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+<div id="slider-container">
+  <label for="year-slider">Year: <span id="year-label">1859</span></label>
+  <input id="year-slider" type="range" min="1859" max="1907" step="1" value="1859" />
+</div>
+
+<script>
+
+  // BASE MAP
+  mapboxgl.accessToken = 'pk.eyJ1IjoiaGlraW5ncGV0ZSIsImEiOiJjbTg1Mmd6OGMxanhnMnFwaTc2eDR2N25iIn0.Fpe3z48swxyRnVe8gNbItg';  //Put your mapbox access token here
+
+        // Load a new map in the 'map' HTML div
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/hikingpete/cmacsmoyk00lr01sih0f2fmu1', // Put your mapbox style ID here
+            center: [-105.5, 39.1], // starting position [lng, lat]
+            zoom: 6 // starting zoom
+        });
+  
+  
+  map.on('load', function() {
+
+            // Add a CIRCLE layer of Historical Mining to the map 
+            map.addLayer({
+                'id':'mining-towns-layer',
+                'type':'circle',
+                'source':{
+                    type:'vector',
+                    url:'mapbox://hikingpete.2z88eh6y' // Your Mapbox tileset Map ID
+                },
+                'source-layer':'colorado_mining_townsCSV-30txez', // name of tilesets
+                'layout':{
+                    'visibility': 'visible'
+                },
+                'paint': {
+                    'circle-color':'#fffef7',
+                    'circle-opacity':0.2,
+                    'circle-stroke-width':{
+                        stops: [[8,0.5], [100,5], [500,10]]
+                    },
+                    'circle-stroke-color':'#000',          //points on the graph
+                    'circle-stroke-opacity':0.5,
+                    'circle-radius': 6
+                }
+            });
+            
+
+        })
+
+
+  
+  
+    // Year slider functionality
+    const slider = document.getElementById('year-slider');
+    const yearLabel = document.getElementById('year-label');
+
+    slider.addEventListener('input', (e) => {
+      const year = parseInt(e.target.value);
+      yearLabel.textContent = year;
+      map.setFilter('mining-towns-layer', ['<=', ['get', 'Year'], year]);
+    });
+
+    // Popup on hover
+    var my_popup = new mapboxgl.Popup()
+    
+    map.on('mouseenter', 'mining-towns-layer', (e) => {
+      map.getCanvas().style.cursor = 'pointer';
+      const props = e.features[0].properties;
+      my_popup
+        .setLngLat(e.lngLat)
+        .setHTML(`<strong>${props.Town}</strong><br>Founded: ${props.Year}`)
+        .addTo(map);
+    });
+
+    map.on('mouseleave', 'mining-towns-layer', () => {
+      map.getCanvas().style.cursor = '';
+      my_popup.remove();
+    });
+  
+  
+  //});
+  
+  
+  
+</script>
+
+</body>
+</html>
