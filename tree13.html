@@ -1,0 +1,88 @@
+<html>
+
+<head>
+<meta charset="utf-8" />
+<title>Harrison 13 - Colorful Denver Tree</title>
+
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+
+<style>
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; };
+</style>
+
+</head>
+
+<body>
+<div id="map"></div>
+
+<script>
+
+    //Put your mapbox access token here
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaGlraW5ncGV0ZSIsImEiOiJjbTg1Mmd6OGMxanhnMnFwaTc2eDR2N25iIn0.Fpe3z48swxyRnVe8gNbItg';  
+
+        // Load a new map in the 'map' HTML div
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/hikingpete/cm9ive6tn00j401speinrhyiv', // Put your mapbox style ID here
+            center: [-104.951046, 39.732470], // starting position [lng, lat]
+            zoom: 12 // starting zoom
+        });
+
+        // When loading the map
+        map.on('load', function() {
+
+            // Add a TREE POINT layer to the map 
+            map.addLayer({
+                'id':'denver_tree_point',
+                'type':'circle',
+                'source':{
+                    type:'vector',
+                    url:'mapbox://hikingpete.78z7bs6r' // After "mapbox://" paste your Mapbox tileset ID
+                },
+                'source-layer':'denver_tree_top_10_genus-b34z9z', // name of tilesets
+                'layout':{
+                    'visibility': 'visible'
+                },
+                'paint': {
+                    // color circle by tree genus
+                    'circle-color':[
+                        'match',
+                        ['get', 'genus'],
+                        'Linden','#a6cee3',
+                        'Maple','#1f78b4',
+                        'Honeylocust','#b2df8a',
+                        'Crabapple','#33a02c',
+                        'Oak','#fb9a99',
+                        'Elm','#e31a1c',
+                        'Pine','#fdbf6f',
+                        'Ash','#ff7f00',
+                        'Hackberry','#cab2d6',
+                        'Spruce','#6a3d9a',
+                        '#ffff99', // default color 
+                    ],
+                    'circle-opacity':1,
+                    'circle-stroke-width':0.5,
+                    'circle-stroke-color':'white',          //points on the graph
+                    'circle-stroke-opacity':0.5,
+
+                    // Make circles larger as the user zooms from z12 to z22.
+                    'circle-radius':{
+                        'base':1.75,
+                        'stops': [
+                            [12, 2],
+                            [22, 150]
+                        ]
+                    }
+                }
+            });
+            
+
+        })
+
+</script>
+
+</body>
+</html>
